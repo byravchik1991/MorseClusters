@@ -22,12 +22,20 @@ public class Main {
 
             conformationTree.buildTree(Settings.FINAL_SIZE, Settings.BEST_BRANCHES_ONLY);
 
-            for (int i = Settings.INITIAL_SIZE + 1; i <= Settings.FINAL_SIZE; i++) {
+            for (int i = Settings.INITIAL_SIZE; i <= Settings.FINAL_SIZE; i++) {
                 Conformation bestConformation = ConformationHelper.findBestConformation(
                         ConformationHelper.collectAllConformationsBySize(conformationTree, i));
                 bestConformation.setBestConformation(true);
-                if (i == Settings.FINAL_SIZE) {
+                if ((i == Settings.FINAL_SIZE)
+                        && (Settings.OPTIMIZATION_TYPE == Settings.OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE)) {
                     MatlabService.getInstance().optimizeAtomPositions(bestConformation);
+                }
+            }
+
+            if (Settings.OPTIMIZATION_TYPE == Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS_ON_LAST_STAGE) {
+                for (Conformation conformation : ConformationHelper.collectAllConformationsBySize(
+                        conformationTree, Settings.FINAL_SIZE)) {
+                    MatlabService.getInstance().optimizeAtomPositions(conformation);
                 }
             }
 
@@ -39,13 +47,13 @@ public class Main {
         } catch (MatlabConnectionException e) {
             e.printStackTrace();
         } catch (MatlabInvocationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } finally {
             try {
                 MatlabService.getInstance().disconnect();
 
             } catch (MatlabConnectionException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
     }

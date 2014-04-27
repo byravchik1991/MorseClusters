@@ -1,7 +1,5 @@
 package diplom;
 
-import diplom.Conformation;
-import diplom.ConformationHelper;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 
@@ -33,6 +31,9 @@ public class ConformationTree {
 
         for (Conformation conformation : conformations) {
             if (isConformationUnique(conformation)) {
+                if (Settings.OPTIMIZATION_TYPE == Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS) {
+                    MatlabService.getInstance().optimizeAtomPositions(conformation);
+                }
                 ConformationHelper.link(parentConformation, conformation);
             }
         }
@@ -41,7 +42,7 @@ public class ConformationTree {
 /*        Conformation bestConformation = ConformationHelper.findBestConformation(
                 ConformationHelper.collectAllConformationsBySize(this, size));*/
         Conformation bestConformation = ConformationHelper.findBestConformation(parentConformation.getSuccessors());
-       // bestConformation.setBestConformation(true);
+        // bestConformation.setBestConformation(true);
 /*        if (bestConformation.getSize() == desiredSize) {
             MatlabService.getInstance().optimizeAtomPositions(bestConformation);
         }*/
@@ -78,7 +79,8 @@ public class ConformationTree {
                 this, newConformation.getSize());
 
         for (Conformation existingConformation : existingConformations) {
-            if (Math.abs(existingConformation.getEnergy()-newConformation.getEnergy())%1 < 0.005) {
+            if (Math.abs(existingConformation.getEnergy() - newConformation.getEnergy()) % 1
+                    < Settings.MIN_ENERGY_DIFFERENCE) {
                 return false;
             }
         }
