@@ -1,8 +1,6 @@
 package diplom;
 
-import diplom.graph.ConformationBondGraphDialog;
-import matlabcontrol.MatlabConnectionException;
-import matlabcontrol.MatlabInvocationException;
+import diplom.graph.MorseFrame;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,8 +11,11 @@ public class Main {
 
 
     public static void main(String[] args) {
-        try {
-            MatlabService.getInstance().connect();
+/*        try {*/
+        MorseFrame morseFrame = new MorseFrame();
+        morseFrame.setVisible(true);
+
+          /*  MatlabService.getInstance().connect();
             MatlabService.getInstance().initGlobalVariables();
             Conformation initialConformation = MatlabService.getInstance().setInitialConformation();
 
@@ -39,10 +40,11 @@ public class Main {
                 }
             }
 
-            ConformationBondGraphDialog dialog = new ConformationBondGraphDialog(conformationTree);
-            dialog.pack();
-            dialog.setVisible(true);
-            System.out.println();
+
+            ConformationBondGraphPanel bondGraphPanel = new ConformationBondGraphPanel(conformationTree);
+            morseFrame.getContentPane().add(bondGraphPanel, BorderLayout.CENTER);
+            morseFrame.invalidate();
+            morseFrame.repaint();
 
         } catch (MatlabConnectionException e) {
             e.printStackTrace();
@@ -55,6 +57,6 @@ public class Main {
             } catch (MatlabConnectionException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }
