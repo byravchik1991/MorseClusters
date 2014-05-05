@@ -22,7 +22,7 @@ public class MatlabService {
     private MatlabProxy proxy;
     private MatlabTypeConverter typeConverter;
 
-    private MatlabService(){
+    private MatlabService() {
     }
 
     public static MatlabService getInstance() throws MatlabConnectionException {
@@ -34,28 +34,30 @@ public class MatlabService {
     }
 
     public void connect() throws MatlabConnectionException {
-       MatlabProxyFactory factory = new MatlabProxyFactory();
-       proxy = factory.getProxy();
-        typeConverter = new MatlabTypeConverter(proxy);
+        if (proxy == null) {
+            MatlabProxyFactory factory = new MatlabProxyFactory();
+            proxy = factory.getProxy();
+            typeConverter = new MatlabTypeConverter(proxy);
+        }
     }
 
     public void disconnect() {
         proxy.disconnect();
     }
 
-    public void initGlobalVariables() throws MatlabInvocationException {
+    public void initGlobalVariables(double r0) throws MatlabInvocationException {
         proxy.eval(String.format(
                 "global ax ay az bx by bz;\n" +
                         "global r0;\n" +
                         "global Ntop;\n" +
                         "global X;\n" +
                         "r0=%s;\n" +
-                        "Ntop=17;", Settings.R0));
+                        "Ntop=17;", r0));
     }
 
-    public Conformation setInitialConformation() throws MatlabInvocationException {
-       //proxy.eval("Xsimp = fscanf(fopen('C:\\Users\\Иришка\\Documents\\MATLAB\\Vigual3\\X6R81.txt', 'r'),'%g',[3,7]);");
-        proxy.eval("Xsimp = fscanf(fopen('" + Settings.FILE_NAME + "', 'r'),'%g',[3," + Settings.INITIAL_SIZE + "]);");
+    public Conformation setInitialConformation(String fileName, int initialSize) throws MatlabInvocationException {
+        //proxy.eval("Xsimp = fscanf(fopen('C:\\Users\\Иришка\\Documents\\MATLAB\\Vigual3\\X6R81.txt', 'r'),'%g',[3,7]);");
+        proxy.eval("Xsimp = fscanf(fopen('" + fileName + "', 'r'),'%g',[3," + initialSize + "]);");
         proxy.eval("Xsimp = Xsimp';");
 
         double[][] positions = typeConverter.getNumericArray("Xsimp").getRealArray2D();
@@ -78,21 +80,24 @@ public class MatlabService {
         double[][] candidates = candidatesArray.getRealArray2D();
 
         List<Conformation> resultConformations = new ArrayList<Conformation>(candidates.length);
-        for (int i=0; i<candidates.length; i++) {
+        for (int i = 0; i < candidates.length; i++) {
             double energy = candidates[i][3];
-            double[][] positions = Arrays.copyOfRange(allPositions, i*newSize, (i+1)*newSize);
+            double[][] positions = Arrays.copyOfRange(allPositions, i * newSize, (i + 1) * newSize);
 
             Conformation conformation = new Conformation(newSize, energy, positions);
             resultConformations.add(conformation);
         }
-         return resultConformations;
+        return resultConformations;
     }
 
     public void optimizeAtomPositions(Conformation conformation) throws MatlabInvocationException {
         typeConverter.setNumericArray("Xsimp", new MatlabNumericArray(conformation.getPositions(), null));
 
-        proxy.eval(String.format("[XR,FR2,exitflag,output] = fminunc(@(x) UmorseResult(x, %s, %s),Xsimp, " +
-                "optimset('TolX',1e-12,'MaxFunEvals',2600,'MaxIter',2600));", conformation.getSize(), Settings.R0));
+/*        proxy.eval(String.format("[XR,FR2,exitflag,output] = fminunc(@(x) UmorseResult(x, %s, %s),Xsimp, " +
+                "optimset('TolX',1e-12,'MaxFunEvals',2600,'MaxIter',2600));", conformation.getSize(), Settings.R0));*/
+        proxy.eval(String.format("[XR,FR2,exitflag,output] = fminunc(@(x) UmorseResult(x, %s, r0),Xsimp, " +
+                "optimset('TolX',1e-12,'MaxFunEvals',2600,'MaxIter',2600));", conformation.getSize()));
+
 
         MatlabNumericArray positionsArray = typeConverter.getNumericArray("XR");
         double[][] positions = positionsArray.getRealArray2D();

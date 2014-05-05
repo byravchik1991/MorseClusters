@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="matlabcontrol-4.1.0" level="project" />
     <orderEntry type="library" name="jgraphx" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.18-bin" level="project" />
   </component>
 </module>
 

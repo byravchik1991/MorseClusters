@@ -14,33 +14,21 @@ public class Main {
 /*        try {*/
         MorseFrame morseFrame = new MorseFrame();
         morseFrame.setVisible(true);
-
-          /*  MatlabService.getInstance().connect();
-            MatlabService.getInstance().initGlobalVariables();
-            Conformation initialConformation = MatlabService.getInstance().setInitialConformation();
-
-            ConformationTree conformationTree = new ConformationTree(initialConformation);
-
-            conformationTree.buildTree(Settings.FINAL_SIZE, Settings.BEST_BRANCHES_ONLY);
-
-            for (int i = Settings.INITIAL_SIZE; i <= Settings.FINAL_SIZE; i++) {
-                Conformation bestConformation = ConformationHelper.findBestConformation(
-                        ConformationHelper.collectAllConformationsBySize(conformationTree, i));
-                bestConformation.setBestConformation(true);
-                if ((i == Settings.FINAL_SIZE)
-                        && (Settings.OPTIMIZATION_TYPE == Settings.OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE)) {
-                    MatlabService.getInstance().optimizeAtomPositions(bestConformation);
-                }
-            }
-
-            if (Settings.OPTIMIZATION_TYPE == Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS_ON_LAST_STAGE) {
-                for (Conformation conformation : ConformationHelper.collectAllConformationsBySize(
-                        conformationTree, Settings.FINAL_SIZE)) {
-                    MatlabService.getInstance().optimizeAtomPositions(conformation);
-                }
-            }
+//        try {
+//            Class.forName("com.mysql.jdbc.Driver");
+//            Connection conn = null;
+//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/morse_clusters", "root", "12011986");
+//            conn.close();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        } catch (SQLException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
 
 
+
+
+/*
             ConformationBondGraphPanel bondGraphPanel = new ConformationBondGraphPanel(conformationTree);
             morseFrame.getContentPane().add(bondGraphPanel, BorderLayout.CENTER);
             morseFrame.invalidate();

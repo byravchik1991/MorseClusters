@@ -11,22 +11,24 @@ import java.awt.*;
  * Date: 15.07.13
  */
 public class ConformationBondGraphPanel extends JPanel {
-    private ConformationTree conformationTree;
-    private ConformationBondGraph bondGraph;
 
-    public ConformationBondGraphPanel(ConformationTree conformationTree) {
-        this.conformationTree = conformationTree;
-
-        initializeControls();
-        initializeView();
-    }
-
-    protected void initializeControls() {
-        bondGraph = new ConformationBondGraph(conformationTree);
-    }
-
-    protected void initializeView() {
-        add(new JScrollPane(bondGraph));
+    public ConformationBondGraphPanel() {
         setBackground(Color.WHITE);
+    }
+
+    public void update(ConformationTree conformationTree) {
+        if (conformationTree != null) {
+            removeAll();
+            ConformationBondGraph bondGraph = new ConformationBondGraph(conformationTree);
+            add(new JScrollPane(bondGraph));
+            revalidate();
+            repaint();
+        }
+    }
+
+    public void reset() {
+        removeAll();
+        revalidate();
+        repaint();
     }
 }

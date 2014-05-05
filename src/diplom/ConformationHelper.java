@@ -1,7 +1,5 @@
 package diplom;
 
-import diplom.Conformation;
-
 import java.util.*;
 
 /**
@@ -39,12 +37,15 @@ public class ConformationHelper {
     }
 
     public static Conformation findBestConformation(Collection<Conformation> conformations) {
-        return Collections.min(conformations, new Comparator<Conformation>() {
+        Conformation minConformation = conformations.isEmpty() ? null : Collections.min(
+                conformations, new Comparator<Conformation>() {
             @Override
             public int compare(Conformation o1, Conformation o2) {
                 return ((Double) (o1.getEnergy())).compareTo(o2.getEnergy());
             }
         });
+
+        return minConformation;
     }
 
     public static Set<Conformation> collectAllConformationsBySize(ConformationTree conformationTree, int size) {
