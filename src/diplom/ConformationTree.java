@@ -23,7 +23,7 @@ public class ConformationTree {
     public void buildTree(
             int desiredSize,
             boolean bestBranchesOnly,
-            Settings.OPTIMIZATION_MODE optimizationMode)
+            OptimizationMode optimizationMode)
             throws MatlabInvocationException, MatlabConnectionException {
 
         buildNextStage(root, desiredSize, bestBranchesOnly, optimizationMode);
@@ -36,7 +36,7 @@ public class ConformationTree {
             }
         }
 
-        if (optimizationMode == Settings.OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE) {
+        if (optimizationMode == OptimizationMode.BEST_CONFORMATION_ON_LAST_STAGE) {
             Conformation bestConformation = ConformationHelper.findBestConformation(
                     ConformationHelper.collectAllConformationsBySize(this, desiredSize));
             if (bestConformation != null) {
@@ -44,7 +44,7 @@ public class ConformationTree {
             }
         }
 
-        if (optimizationMode == Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS_ON_LAST_STAGE) {
+        if (optimizationMode == OptimizationMode.ALL_CONFORMATIONS_ON_LAST_STAGE) {
             for (Conformation conformation : ConformationHelper.collectAllConformationsBySize(
                     this, desiredSize)) {
                 MatlabService.getInstance().optimizeAtomPositions(conformation);
@@ -52,13 +52,14 @@ public class ConformationTree {
         }
     }
 
-    private void buildNextStage(Conformation parentConformation, int desiredSize, boolean bestBranchesOnly, Settings.OPTIMIZATION_MODE optimizationMode)
-            throws MatlabConnectionException, MatlabInvocationException {
+    private void buildNextStage(Conformation parentConformation, int desiredSize, boolean bestBranchesOnly,
+                                OptimizationMode optimizationMode) throws MatlabConnectionException, MatlabInvocationException {
+
         List<Conformation> conformations = MatlabService.getInstance().getNextConformations(parentConformation);
 
         for (Conformation conformation : conformations) {
             if (isConformationUnique(conformation)) {
-                if (optimizationMode == Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS) {
+                if (optimizationMode == OptimizationMode.ALL_CONFORMATIONS) {
                     MatlabService.getInstance().optimizeAtomPositions(conformation);
                 }
                 ConformationHelper.link(parentConformation, conformation);

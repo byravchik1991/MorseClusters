@@ -14,14 +14,7 @@ public class Settings {
 
     public static final boolean BEST_BRANCHES_ONLY = false;
 
-    public static final OPTIMIZATION_MODE OPTIMIZATION_TYPE = OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE;
+    public static final OptimizationMode OPTIMIZATION_TYPE = OptimizationMode.BEST_CONFORMATION_ON_LAST_STAGE;
 
     public static final double MIN_ENERGY_DIFFERENCE = 0.005;
-
-    public enum OPTIMIZATION_MODE {
-        NO_OPTIMIZATION,
-        BEST_CONFORMATION_ON_LAST_STAGE,
-        ALL_CONFORMATIONS_ON_LAST_STAGE,
-        ALL_CONFORMATIONS
-    }
 }

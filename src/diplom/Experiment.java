@@ -8,19 +8,28 @@ import java.util.Date;
  * Date: 02.05.14
  */
 public class Experiment {
+
+    private int id;
     private double r0;
     private int initialSize;
     private int finalSize;
     private String fileName;
     private boolean bestBranchesOnly = false;
-    private Settings.OPTIMIZATION_MODE optimizationMode = Settings.OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE;
+    private OptimizationMode optimizationMode = OptimizationMode.BEST_CONFORMATION_ON_LAST_STAGE;
     private double minEnergyDifference = 0.005;
 
     private ConformationTree resultConformationTree;
 
     private Date experimentDate = new Date();
-    private String programRevision;
+    private String programRevision = "0";
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getR0() {
         return r0;
@@ -62,11 +71,11 @@ public class Experiment {
         this.bestBranchesOnly = bestBranchesOnly;
     }
 
-    public Settings.OPTIMIZATION_MODE getOptimizationMode() {
+    public OptimizationMode getOptimizationMode() {
         return optimizationMode;
     }
 
-    public void setOptimizationMode(Settings.OPTIMIZATION_MODE optimizationMode) {
+    public void setOptimizationMode(OptimizationMode optimizationMode) {
         this.optimizationMode = optimizationMode;
     }
 

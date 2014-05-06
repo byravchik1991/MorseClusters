@@ -2,6 +2,7 @@ package diplom.graph;
 
 import diplom.Experiment;
 import diplom.ExperimentService;
+import diplom.MySqlService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,11 @@ public class MorseFrame extends JFrame {
     private JProgressBar newExperimentProgressBar;
 
     private ConformationBondGraphPanel conformationBondGraphPanel;
+    private Experiment currentExperiment;
+    private boolean experimentSaved = false;
+
+    private JButton saveExperimentButton;
+    private JButton newExperimentButton;
 
     public MorseFrame() throws HeadlessException {
         initializeControls();
@@ -55,7 +61,7 @@ public class MorseFrame extends JFrame {
     private void initializeControls() {
         toolBar = new JToolBar(TOOLBAR_TITLE, JToolBar.VERTICAL);
 
-        JButton newExperimentButton = new JButton();
+        newExperimentButton = new JButton();
         newExperimentButton.setIcon(NEW_EXPERIMENT_ICON);
         newExperimentButton.setToolTipText(NEW_EXPERIMENT_TITLE);
         newExperimentButton.addActionListener(new AbstractAction() {
@@ -67,59 +73,72 @@ public class MorseFrame extends JFrame {
                 if (newExperiment != null) {
                     newExperimentProgressBar.setVisible(true);
                     conformationBondGraphPanel.reset();
+                    currentExperiment = null;
 
                     new SwingWorker<Void, Void>() {
-
                         @Override
                         protected Void doInBackground() throws Exception {
                             try {
                                 ExperimentService.executeExperiment(newExperiment);
-                            } catch (/*final MatlabConnectionException*/final Throwable e1) {
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        JOptionPane.showMessageDialog(MorseFrame.this, e1.toString());
-                                        e1.printStackTrace();
-                                    }
-                                });
-                            }/* catch (final MatlabInvocationException e1) {
-                                SwingUtilities.invokeLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        JOptionPane.showMessageDialog(MorseFrame.this, e1.toString());
-                                        e1.printStackTrace();
-                                    }
-                                });
-                            }*/
+                            } catch (final Throwable e1) {
+                                handleException(e1);
+                            }
                             return null;
                         }
 
                         @Override
                         protected void done() {
                             conformationBondGraphPanel.update(newExperiment.getResultConformationTree());
+                            currentExperiment = newExperiment;
                             MorseFrame.this.revalidate();
                             MorseFrame.this.repaint();
                             newExperimentProgressBar.setVisible(false);
+                            experimentSaved = false;
+                            updateSaveExperomentButton();
 
                             super.done();
                         }
                     }.execute();
-                    // SwingUtilities.invokeLater(new Runnable() {
                 }
-
             }
         });
 
-        JButton saveExperimentButton = new JButton();
+        saveExperimentButton = new JButton();
         saveExperimentButton.setIcon(SAVE_EXPERIMENT_ICON);
         saveExperimentButton.setToolTipText(SAVE_EXPERIMENT_TITLE);
+        saveExperimentButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                newExperimentProgressBar.setVisible(true);
+
+                new SwingWorker<Void, Void>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        try {
+                            MySqlService.insertExperiment(currentExperiment);
+                        } catch (final Throwable e1) {
+                            handleException(e1);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        experimentSaved = true;
+                        updateSaveExperomentButton();
+                        newExperimentProgressBar.setVisible(false);
+                        super.done();
+                    }
+                }.execute();
+            }
+        });
+        updateSaveExperomentButton();
 
         JButton openExperimentButton = new JButton();
         openExperimentButton.setIcon(OPEN_EXPERIMENT_ICON);
         openExperimentButton.setActionCommand(OPEN_EXPERIMENT_TITLE);
 
         newExperimentProgressBar = new JProgressBar();
-        //newExperimentProgressBar.setString("Начат новый эксперимент...");
         newExperimentProgressBar.setIndeterminate(true);
         newExperimentProgressBar.setVisible(false);
         newExperimentProgressBar.setAlignmentX(RIGHT_ALIGNMENT);
@@ -129,8 +148,19 @@ public class MorseFrame extends JFrame {
         toolBar.add(openExperimentButton);
 
         conformationBondGraphPanel = new ConformationBondGraphPanel();
-        // toolBar.addSeparator();
-        //toolBar.add(UIHelper.packInShiftedPanel(newExperimentProgressBar, UIHelper.MAX_GAP));
-        // toolBar.addSeparator();
+    }
+
+    private void updateSaveExperomentButton() {
+        saveExperimentButton.setEnabled(currentExperiment != null && !experimentSaved);
+    }
+
+    private void handleException(final Throwable e1) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JOptionPane.showMessageDialog(MorseFrame.this, e1.toString());
+                e1.printStackTrace();
+            }
+        });
     }
 }

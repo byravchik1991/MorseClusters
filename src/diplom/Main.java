@@ -14,16 +14,31 @@ public class Main {
 /*        try {*/
         MorseFrame morseFrame = new MorseFrame();
         morseFrame.setVisible(true);
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection conn = null;
-//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/morse_clusters", "root", "12011986");
-//            conn.close();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (SQLException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
+        // try {
+/*            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = null;
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/morse_clusters", "root", "12011986");
+            Persist persistMysql = new Persist(connection);*/
+
+/*            Experiment experiment = new Experiment();
+            experiment.setR0(6.0);
+            experiment.setInitialSize(10);
+            experiment.setFinalSize(15);
+            experiment.setOptimizationMode(OptimizationMode.ALL_CONFORMATIONS);
+            MySqlService.insertExperiment(experiment);*/
+
+/*            persistMysql.insert(experiment);
+            experiment.setInitialSize(12);
+            persistMysql.insert(experiment);
+            List<Experiment> experimentFromDb = persistMysql.readList(Experiment.class);*/
+
+
+        // connection.close();
+/*        } catch (ClassNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }*/
 
 
 

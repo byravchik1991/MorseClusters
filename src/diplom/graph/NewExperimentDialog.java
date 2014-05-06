@@ -1,7 +1,7 @@
 package diplom.graph;
 
 import diplom.Experiment;
-import diplom.Settings;
+import diplom.OptimizationMode;
 
 import javax.swing.*;
 import javax.swing.text.InternationalFormatter;
@@ -127,15 +127,15 @@ public class NewExperimentDialog extends JDialog {
                     return;
                 }
 
-                Settings.OPTIMIZATION_MODE optimizationMode = null;
+                OptimizationMode optimizationMode = null;
                 if (noOptimizationModeRadioButton.isSelected()) {
-                    optimizationMode = Settings.OPTIMIZATION_MODE.NO_OPTIMIZATION;
+                    optimizationMode = OptimizationMode.NO_OPTIMIZATION;
                 } else if (bestConfOnLasStageRadioButton.isSelected()) {
-                    optimizationMode = Settings.OPTIMIZATION_MODE.BEST_CONFORMATION_ON_LAST_STAGE;
+                    optimizationMode = OptimizationMode.BEST_CONFORMATION_ON_LAST_STAGE;
                 } else if (allConfOnLastStageRadioButton.isSelected()) {
-                    optimizationMode = Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS_ON_LAST_STAGE;
+                    optimizationMode = OptimizationMode.ALL_CONFORMATIONS_ON_LAST_STAGE;
                 } else if (allConfRadioButton.isSelected()) {
-                    optimizationMode = Settings.OPTIMIZATION_MODE.ALL_CONFORMATIONS;
+                    optimizationMode = OptimizationMode.ALL_CONFORMATIONS;
                 }
                 if (optimizationMode == null) {
                     JOptionPane.showMessageDialog(NewExperimentDialog.this, "Выберите параметры оптимизации!");

@@ -10,6 +10,7 @@ import java.util.List;
  * Date: 19.03.14
  */
 public class Conformation {
+    private int id;
     private int size;
     private double energy;
     private double[][] positions;
@@ -23,6 +24,14 @@ public class Conformation {
         this.size = size;
         this.energy = energy;
         this.positions = positions;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getSize() {
